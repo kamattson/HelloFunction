@@ -9,11 +9,13 @@ on:
 env:
   AZURE_FUNCTIONAPP_NAME: HelloTestFunc  # set this to your application's name
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'    # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '4.x'              # set this to the dotnet version to use
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet: [ '2.1.x', '3.1.x', '5.0.x' ]
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v2
@@ -21,7 +23,7 @@ jobs:
     - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: ${{ matrix.dotnet }}
 
     - name: 'Resolve Project Dependencies Using Dotnet'
       shell: bash
